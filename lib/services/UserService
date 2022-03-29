@@ -1,9 +1,9 @@
-const bcrypt = require('bcryptjs');
+const bcryptjs = require('bcryptjs');
 const User = require('../models/User');
 
 module.exports = class UserService {
   static async create({ username, password }) {
-    const passwordHash = bcrypt.hashSync(
+    const passwordHash = bcryptjs.hashSync(
       password,
       Number(process.env.SALT_ROUNDS)
     );
