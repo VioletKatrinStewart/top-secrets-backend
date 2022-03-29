@@ -26,7 +26,7 @@ describe('top-secrets-backend routes', () => {
       username: 'violet',
       password: 'violetiscool',
     });
-
+    console.log('user', user);
     const res = await request(app)
       .post('/api/v1/users/sessions')
       .send({ username: 'violet', password: 'violetiscool' });
