@@ -26,7 +26,7 @@ describe('top-secrets-backend routes', () => {
       username: 'violet',
       password: 'violetiscool',
     });
-    console.log('user', user);
+
     const res = await request(app)
       .post('/api/v1/users/sessions')
       .send({ username: 'violet', password: 'violetiscool' });
@@ -34,6 +34,24 @@ describe('top-secrets-backend routes', () => {
     expect(res.body).toEqual({
       message: 'You are signed in!',
       user,
+    });
+  });
+
+  it('should sign out user and return signed out message', async () => {
+    await UserService.create({
+      username: 'violet',
+      password: 'violetiscool',
+    });
+    await UserService.signIn({
+      username: 'violet',
+      password: 'violetiscool',
+    });
+
+    const res = await request(app).delete('/api/v1/users/sessions');
+
+    expect(res.body).toEqual({
+      success: true,
+      message: 'Signed out successfully!',
     });
   });
 });
