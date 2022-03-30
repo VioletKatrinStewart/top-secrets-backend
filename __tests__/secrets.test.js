@@ -2,7 +2,7 @@ const pool = require('../lib/utils/pool');
 const setup = require('../data/setup');
 const request = require('supertest');
 const app = require('../lib/app');
-const UserService = require('../lib/services/UserService');
+//const UserService = require('../lib/services/UserService');
 
 describe('secrets routes', () => {
   beforeEach(() => {
@@ -31,8 +31,8 @@ describe('secrets routes', () => {
       username: 'violet',
       password: 'violetiscool',
     };
-    await UserService.create(user);
-    await UserService.signIn(user);
+    await agent.post('/api/v1/users').send(user);
+    await agent.post('/api/v1/users/sessions').send(user);
 
     const expected = {
       title: 'DO NOT READ',
