@@ -2,7 +2,6 @@ const pool = require('../lib/utils/pool');
 const setup = require('../data/setup');
 const request = require('supertest');
 const app = require('../lib/app');
-//const UserService = require('../lib/services/UserService');
 
 describe('secrets routes', () => {
   beforeEach(() => {
@@ -25,7 +24,7 @@ describe('secrets routes', () => {
     });
   });
 
-  it.only('posts a secret because user is logged in', async () => {
+  it('posts a secret because user is logged in', async () => {
     const agent = request.agent(app);
     const user = {
       username: 'violet',
@@ -44,5 +43,32 @@ describe('secrets routes', () => {
       id: expect.any(String),
       createdAt: expect.any(String),
     });
+  });
+
+  it('gets a list of secrets', async () => {
+    const agent = request.agent(app);
+    const user = {
+      username: 'violet',
+      password: 'violetiscool',
+    };
+    await agent.post('/api/v1/users').send(user);
+    await agent.post('/api/v1/users/sessions').send(user);
+
+    const secret1 = {
+      title: 'DO NOT READ',
+      description: 'SHHHH THIS IS A SECRET',
+    };
+    await agent.post('/api/v1/secrets').send(secret1);
+
+    const secret2 = {
+      title: 'I LIKE SLEEPING',
+      description: 'ZZZZZZZ',
+    };
+    await agent.post('/api/v1/secrets').send(secret2);
+    const res = await agent.get('/api/v1/secrets');
+    expect(res.body).toEqual([
+      { ...secret1, id: expect.any(String), createdAt: expect.any(String) },
+      { ...secret2, id: expect.any(String), createdAt: expect.any(String) },
+    ]);
   });
 });
